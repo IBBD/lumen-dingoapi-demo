@@ -81,6 +81,24 @@ $app->singleton(
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(Dingo\Api\Provider\LumenServiceProvider::class);
+
+# Authentication Providers
+//app('Dingo\Api\Auth\Auth')->extend('jwt', function ($app) {
+    //return new Dingo\Api\Auth\Provider\JWT($app['\Tymon\JWTAuth\JWTAuth']);
+//});
+
+# Throttling / Rate Limiting
+$app['Dingo\Api\Http\RateLimit\Handler']->extend(function ($app) {
+    return new Dingo\Api\Http\RateLimit\Throttle\Authenticated;
+});
+
+# Response Transformer
+$app['Dingo\Api\Transformer\Factory']->setAdapter(function ($app) {
+    $fractal = new League\Fractal\Manager;
+    $fractal->setSerializer(new League\Fractal\Serializer\JsonApiSerializer);
+    return new Dingo\Api\Transformer\Adapter\Fractal($fractal);
+});
 
 /*
 |--------------------------------------------------------------------------
